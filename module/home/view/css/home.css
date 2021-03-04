@@ -1,9 +1,9 @@
 #main-carousel.owl-carousel {
     height: 900px;
-	margin-top: 0;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 50px;
+	margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
 }
 
 #main-carousel.owl-carousel .owl-nav {
@@ -73,7 +73,7 @@
     visibility: hidden;
 }
 
-.plataform h1{
+.plataformdiv h1{
     position: absolute;
     top: 5%;
     left: 5%;
@@ -96,7 +96,86 @@ button.category {
 	text-align: center;
 }
 
-#button.category :hover {
+button.category :hover {
+	background: rgba(0, 0, 0, 0.9);
+	color: #FFF;
+}
+
+button.plataform {
+	position: absolute;
+	top: 70%;
+    left: 35%;
+	height: 60px;
+	margin: none;
+    background: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+	/* color: rgba(0, 0, 0, 0.5); */
+	font-size: 23px;
+	width: 200px;
+	height: 60px;
+	line-height: 30px;
+	border-radius: 0;
+	text-align: center;
+}
+
+button.plataform :hover {
+	background: rgba(0, 0, 0, 0.9);
+	color: #FFF;
+}
+
+#plataformtextdiv {
+    text-align: center;
+    width: 100%;
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#relatedtextdiv {
+    text-align: center;
+    width: 100%;
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#relateddiv {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.prod_content {
+    margin-top: 70px;
+    width: 50%;
+    text-align: center;
+}
+
+.prod_content *{
+    width: 60%;
+}
+
+#buttonshowmorediv {
+    text-align: center;
+    width: 100%;
+}
+
+#show_more {
+    height: 60px;
+	margin: none;
+    background: rgba(7, 7, 7, 0.788);
+    color: rgba(255, 255, 255, 1);
+	/* color: rgba(0, 0, 0, 0.5); */
+	font-size: 23px;
+	width: 200px;
+	height: 60px;
+	line-height: 30px;
+	border-radius: 0;
+	text-align: center;
+}
+
+#show_more :hover {
 	background: rgba(0, 0, 0, 0.9);
 	color: #FFF;
 }

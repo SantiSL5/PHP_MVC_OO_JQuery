@@ -73,5 +73,37 @@
     border: black 1px solid;
 }
 
+#details {
+    background-color: chartreuse;
+    text-align: center;
+    width: 100%;
+    margin-right: 20%;
+    margin-left:20%;
+    padding-bottom: 30px;
+}
 
+.cleandetails {
+    height: 60px;
+	margin: none;
+    background: rgba(7, 7, 7, 0.788);
+    color: rgba(255, 255, 255, 1);
+	/* color: rgba(0, 0, 0, 0.5); */
+	font-size: 23px;
+	width: 200px;
+	height: 60px;
+	line-height: 30px;
+	border-radius: 0;
+	text-align: center;
+}
 
+.cleandetails :hover {
+	background: rgba(0, 0, 0, 0.9);
+	color: #FFF;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+  

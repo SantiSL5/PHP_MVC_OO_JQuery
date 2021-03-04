@@ -14,9 +14,11 @@
         <link rel="stylesheet" href="/external/OwlCarousel2-2.3.4/dist/assets/owl.carousel.css">
         <link rel="stylesheet" href="/external/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css">
         <script src="/external/OwlCarousel2-2.3.4/dist/owl.carousel.js"></script>
+        <script src="/credentials/credentials.js"></script>
+        <link rel="stylesheet" href="/module/shop/view/css/shop.css">
+        <link rel="stylesheet" href="/module/menu/view/css/menu.css">
         <script src="/module/shop/view/js/shop.js"></script>
         <script src="view/js/translate.js"></script>
-        <link rel="stylesheet" href="/module/shop/view/css/shop.css">
-        <script src="module/menu/view/menu.js"></script>
+        <script src="module/menu/view/js/menu.js"></script>
     </head>
     <body>

@@ -33,6 +33,15 @@
 							<li><a class="dropdown-item" data-tr = "English" id = "btn-en"></a></li>
 						</ul>
 					</li>
+					<form class="d-flex">
+						<div class = "input">
+							<input id="input_search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" autocomplete=off>
+							<div id = "searchAutocomplete"></div>
+						</div>
+
+
+        				<button id="button_search" name="button_search" class="btn btn-outline-success" type="button">Search</button>
+      				</form>
 				</ul>
 			</div>
 		</div>

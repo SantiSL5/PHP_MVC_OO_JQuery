@@ -85,9 +85,10 @@ function loadSecundaryCarousel() {
     ajaxPromise('module/home/controller/controller_home.php?op=plataforms','GET','JSON').then(function(data){
         console.log(data);
         for (let i = 0; i < data.length; i++) {
-            $('<div></div>').attr({'id':data[i]['plataforma'],'class':'plataform'}).appendTo('#secundary-carousel');
-            $('<img>').attr({'src':data[i]['img']}).appendTo('#'+data[i]['plataforma']);
-            $('<h1></h1>').text(data[i]['plataforma']).appendTo('#'+data[i]['plataforma']);
+            $('<div></div>').attr({'id':data[i]['plataforma']+"div",'class':'plataformdiv'}).appendTo('#secundary-carousel');
+            $('<img>').attr({'src':data[i]['img']}).appendTo('#'+data[i]['plataforma']+"div");
+            $('<h1></h1>').text(data[i]['plataforma']).appendTo('#'+data[i]['plataforma']+"div");
+            $('<button></button>').attr({'id':data[i]['plataforma'],'class':'plataform'}).text(data[i]['plataforma']).appendTo('#'+data[i]['plataforma']+"div");
         }
         showSecundaryCarousel();
     }).catch(function(textStatus){
@@ -99,58 +100,83 @@ function categoryClick() {
     $(document).on("click", ".category" ,function(){
         id=this.getAttribute('id');
         sessionStorage.setItem('genero', id);
-        console.log(sessionStorage.getItem('genero'));
+        // console.log(sessionStorage.getItem('genero'));
         window.location.href = 'index.php?page=shop';
     });
 }
 
 function plataformClick() {
     $(document).on("click", ".plataform" ,function(){
-        localStorage.setItem('plataform', this.getAttribute('id'));
+        id=this.getAttribute('id');
+        sessionStorage.setItem('plataform', id);
+        // console.log(sessionStorage.getItem('plataform'));
+        window.location.href = 'index.php?page=shop';
+    });
+}
+
+function show_related(limit) {
+    limit = limit + 3;
+
+    $.ajax({
+        type: "GET",
+        url: "https://www.googleapis.com/books/v1/volumes",
+        data: { "q": "games" },
+        dataType: "JSON"
+    }).done(function(response) {
+        var item;
+        var more = true;
+        if (limit >= response.items.length) {
+            limit = response.items.length;
+            more = true;
+        }
+        for (row = 0; row < limit; row++) {
+            item = response.items[row];
+            if (item !== null) {
+                $("<div></div>").attr({ "id": item.id, "class": "prod_content" }).appendTo("#relateddiv")
+                    .html('<div class="img-prod"><img src="' + item.volumeInfo.imageLinks.thumbnail + '" alt="Generic placeholder image"></div>' +
+                        '<h4>' + item.volumeInfo.title + '</h4>' +
+                        '<p><a class="btn btn-default" href="' + item.volumeInfo.previewLink + '" role="button" target="_blank">Ver &raquo;</a></p>');
+            }
+        }
+
+        if (more) {
+            showMore(limit);
+        }
+
+
+    }).fail(function(response) {
+        console.log(response);
+    });
+}
+
+function showMore(limit) {
+    $("#show_more").on("click", function() {
+        $('.loader_bg').fadeToggle();
+        show_related(limit);
+        setTimeout(function() {
+            $('.loader_bg').fadeToggle();
+        }, 1000);
     });
 }
 
 function loadHome() {
     $('<div></div>').attr({'id':'main-carousel','class':'owl-carousel'}).appendTo('#home');
+    $('<div></div>').attr({'id':'plataformtextdiv'}).appendTo('#home');
+    $('<h1></h1>').text('Plataforms').appendTo('#plataformtextdiv');
     $('<div></div>').attr({'id':'secundary-carousel','class':'owl-carousel'}).appendTo('#home');
+    $('<div></div>').attr({'id':'relatedtextdiv'}).appendTo('#home');
+    $('<h1></h1>').text('Related products').appendTo('#relatedtextdiv');
+    $('<div></div>').attr({'id':'relateddiv'}).appendTo('#home');
+    $('<div></div>').attr({'id':'buttonshowmorediv'}).appendTo('#home');
+    $("<button>Show more...</button>").attr({ "id": "show_more" }).text('Show more...').appendTo("#buttonshowmorediv");
 
     loadMainCarousel();
     loadSecundaryCarousel();
     plataformClick();
     categoryClick();
+    show_related(3);
 }
 
 $(document).ready(function() {
     loadHome();
 });
-
-// function loadCarousel() {
-//     $.ajax({
-//         type: 'GET',
-//         dataType: 'JSON',
-//         url: 'module/home/controller/controller_home.php?op=carousel',
-//     }).done(function(jsondata) {
-//         var content = "";
-//         $('<div></div>').attr({'id':'main-carousel-boot5','class':'carousel slide','data-bs-ride':'carousel'}).appendTo('#home');
-//         $('<div></div>').attr({'id':'main-carousel-inner','class':'carousel inner'}).appendTo('#main-carousel-boot5');
-
-//         for (let i = 0; i < jsondata.length; i++) {
-//             $('<div></div>').attr({'id':jsondata[i]['category_name'],'class':'carousel-item'}).appendTo('#main-carousel-inner');
-//             $('<img>').attr({'class':'d-block w-100','src':jsondata[i]['img']}).appendTo('#'+jsondata[i]['category_name']);
-            
-//         }
-
-        
-//         $('<a></a>').attr({'id':'main-prev','class':'carousel-control-prev','role':'button','data-bs-ride':'prev'}).appendTo('#main-carousel-boot5');
-//         $('<span></span>').attr({'class':'carousel-control-prev-icon','aria-hidden':'true'}).appendTo('#main-prev');
-//         $('<span></span>').attr({'class':'visually-hidden'}).text("Previous").appendTo('#main-prev');
-
-//         $('<a></a>').attr({'id':'main-next','class':'carousel-control-prev','role':'button','data-bs-ride':'next'}).appendTo('#main-carousel-boot5');
-//         $('<span></span>').attr({'class':'carousel-control-next-icon','aria-hidden':'true'}).appendTo('#main-prev');
-//         $('<span></span>').attr({'class':'visually-hidden'}).text("Next").appendTo('#main-prev');
-
-//         // showCarousel();
-//     }).fail(function (jqXHR, textStatus, errorThrown) {
-//         console.log(textStatus);
-//     });
-// };

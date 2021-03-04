@@ -13,11 +13,20 @@ function ajaxPromise(sUrl, sType, sTData, sData = undefined) {
     });
 }
 
+function set_api() {
+    var language = localStorage.getItem("lang");
+    $("<div></div>").attr({ "id": "map" }).appendTo("#details");
+    var script = document.createElement('script');
+    script.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY_GMAPS + "&language=" + language + "&callback=initMap";
+    script.async;
+    script.defer;
+    document.getElementsByTagName('script')[0].parentNode.appendChild(script);
+}
+
 function rangeSlider() {
     ajaxPromise('module/shop/controller/controller_shop.php?op=rangeslider','POST','JSON').then(function(datarange){
         localStorage.setItem('minrange', Number(datarange[0]['minim']));
         localStorage.setItem('maxrange', Number(datarange[0]['maxim']));
-        console.log("first");
         $( "#slider-range" ).slider({
             range: true,
             min: Number(datarange[0]['minim']),
@@ -30,7 +39,7 @@ function rangeSlider() {
             }
         });
         $( "#amount" ).val($( "#slider-range" ).slider( "values", 0 ) + "€ - " + $( "#slider-range" ).slider( "values", 1 ) + "€");
-        listallproducts();
+        listallproducts(1);
     }).catch(function(textStatus){
             console.log(textStatus);
     });
@@ -75,35 +84,14 @@ function loadPagelist() {
     $('<div></div>').attr({'id':'pagination'}).insertAfter("#shop");
 }
 
-function listallproducts() {
-    if (sessionStorage.getItem('genero')!=null) {
-        localStorage.setItem('genero', sessionStorage.getItem('genero'));
-        sessionStorage.removeItem('genero');
-    }
-    if (localStorage.getItem('plataform')===null) {
-        localStorage.setItem('plataform', $("#plataforms").val());
-    }
-    if (localStorage.getItem('age')===null) {
-        localStorage.setItem('age', $("#age").val());
-    }
-    if (localStorage.getItem('genero')===null) {
-        localStorage.setItem('genero', $("#genero").val());
-    }
-    
-
-
-
-    console.log("m"+localStorage.getItem('minrange'));
-    console.log("M"+localStorage.getItem('maxrange'));
-    console.log("p "+localStorage.getItem('plataform'));
-    console.log("a"+localStorage.getItem('age'));
-    console.log("g "+sessionStorage.getItem('genero'));
-
-    ajaxPromise('module/shop/controller/controller_shop.php?op=listall','POST','JSON',{minrange:localStorage.getItem('minrange'),maxrange:localStorage.getItem('maxrange'),plataform:localStorage.getItem('plataform'),age:localStorage.getItem('age'),genero:localStorage.getItem('genero')}).then(function(data){
-        if (data[0]['count']==0) {
-            $('<p></p>').text('No products found').appendTo('#container-products');
-        }else{
-            for (let i = 0; i < data.length; i++) {
+function printProducts(numberofpages,limit,offset,data) {
+    $('#container-products').empty();
+    console.log(data);
+    if (data.length==1) {
+        $('<p></p>').text('No products found').appendTo('#container-products');
+    }else{
+        if (((offset-1)*limit)+4>data.length) {
+            for (let i = ((offset-1)*limit)+1; i <= data.length-1; i++) {
                 $('<div></div>').attr({'id':data[i].id,'class':'card'}).appendTo('#container-products');
                 $('<img></img>').attr({'src':data[i].img}).appendTo('#'+data[i].id);
                 $('<div></div>').attr({'class':'infodiv'}).appendTo('#'+data[i].id);
@@ -116,7 +104,110 @@ function listallproducts() {
                 $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
                 $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
             }
+        }else{
+            for (let i = ((offset-1)*limit)+1; i <= (offset-1)*limit+limit; i++) {
+                $('<div></div>').attr({'id':data[i].id,'class':'card'}).appendTo('#container-products');
+                $('<img></img>').attr({'src':data[i].img}).appendTo('#'+data[i].id);
+                $('<div></div>').attr({'class':'infodiv'}).appendTo('#'+data[i].id);
+                $('<ul></ul>').attr({'class':'infodiv'}).appendTo('#'+data[i].id+' .infodiv');
+                $('<li></li>').text(data[i].nombre).appendTo('#'+data[i].id+' .infodiv ul');
+                $('<li></li>').text(data[i].plataforma).appendTo('#'+data[i].id+' .infodiv ul');
+                $('<li></li>').text(data[i].clasificacion).appendTo('#'+data[i].id+' .infodiv ul');
+                $('<li></li>').text(data[i].estado).appendTo('#'+data[i].id+' .infodiv ul');
+                $('<div></div>').attr({'class':'divbutton'}).appendTo('#'+data[i].id);
+                $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
+                $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+            }
+        } 
+    }
+}
+
+function loadPagination(numberofpages,limit,offset,data) {
+    $('#pagination').empty();
+    if (offset==1) {
+        $("<button></button>").attr({ "id": "pag-back"}).text('<').prop("disabled",true).appendTo("#pagination");
+    }else {
+        $("<button></button>").attr({ "id": "pag-back"}).text('<').appendTo("#pagination");
+    }
+    
+    $("<button></button>").attr({ "class": "actual-page", "data": offset }).text(offset).appendTo("#pagination");
+    if (offset+3>numberofpages) {
+        for (let i = 1; i <= numberofpages-offset; i++) {
+            $("<button></button>").attr({ "class": "page", "data": offset+i }).text(offset+i).appendTo("#pagination");
         }
+    }else if (offset+3<=numberofpages) {
+        for (let i = 1; i <= 3; i++) {
+            $("<button></button>").attr({ "class": "page", "data": offset+i }).text(offset+i).appendTo("#pagination");
+        }
+    }
+    if (offset==numberofpages) {
+        $("<button></button>").attr({ "id": "pag-next"}).text('>').prop("disabled",true).appendTo("#pagination");
+    }else {
+        $("<button></button>").attr({ "id": "pag-next"}).text('>').appendTo("#pagination");
+    }
+
+    $(document).on("click", "#pag-back" ,function(){
+        if (offset!=1) {
+            offset--;
+            $('#container-products').empty();
+            listallproducts(offset);
+        }
+    });
+
+    $(document).on("click", "#pag-next" ,function(){
+        if (offset!=numberofpages) {
+            offset++;
+            $('#container-products').empty();
+            listallproducts(offset);
+        }
+    });
+
+    $(document).on("click", ".page" ,function(){
+        if (offset!=numberofpages) {
+            $('#container-products').empty();
+            listallproducts(Number(this.getAttribute("data")));
+        }
+    });
+
+    printProducts(numberofpages,limit,offset,data);
+}
+
+function listallproducts(offset) {
+
+    if (sessionStorage.getItem('search')!=null) {
+        localStorage.setItem('search', sessionStorage.getItem('search'));
+        sessionStorage.removeItem('search');
+    }
+    if (sessionStorage.getItem('genero')!=null) {
+        localStorage.setItem('genero', sessionStorage.getItem('genero'));
+        sessionStorage.removeItem('genero');
+    }
+    if (sessionStorage.getItem('plataform')!=null) {
+        localStorage.setItem('plataform', sessionStorage.getItem('plataform'));
+        sessionStorage.removeItem('plataform');
+    }
+    if (localStorage.getItem('plataform')===null) {
+        localStorage.setItem('plataform', $("#plataforms").val());
+    }
+    if (localStorage.getItem('age')===null) {
+        localStorage.setItem('age', $("#age").val());
+    }
+    if (localStorage.getItem('genero')===null) {
+        localStorage.setItem('genero', $("#genero").val());
+    }
+    console.log("s"+sessionStorage.getItem('search'));
+    console.log("h"+localStorage.getItem('search'));
+
+    // console.log("m"+localStorage.getItem('minrange'));
+    // console.log("M"+localStorage.getItem('maxrange'));
+    // console.log("p "+localStorage.getItem('plataform'));
+    // console.log("a"+localStorage.getItem('age'));
+    // console.log("g "+sessionStorage.getItem('genero'));
+
+    ajaxPromise('module/shop/controller/controller_shop.php?op=listall','POST','JSON',{minrange:localStorage.getItem('minrange'),maxrange:localStorage.getItem('maxrange'),plataform:localStorage.getItem('plataform'),age:localStorage.getItem('age'),genero:localStorage.getItem('genero'),search:localStorage.getItem('search')}).then(function(data){
+        numberofpages=Math.ceil((data.length-1) / 4);
+        limit=4;
+        loadPagination(numberofpages,limit,offset,data);
     }).catch(function(textStatus){
             console.log(textStatus);
     });
@@ -130,7 +221,7 @@ function filter() {
         localStorage.setItem('age', $("#age").val());
         localStorage.setItem('genero', $("#genero").val());
         $('#container-products').empty();
-        listallproducts();
+        listallproducts(1);
     });
 }
 
@@ -141,40 +232,60 @@ function clearfilters() {
         localStorage.setItem('plataform', $("#plataforms").val());
         localStorage.setItem('age', $("#age").val());
         localStorage.setItem('genero', $("#genero").val());
+        localStorage.removeItem('search');
         location.reload();
     });
 }
 
 function redirectDetails() {
     $(document).on("click", ".showdetails" ,function(){
-        localStorage.setItem('currentPage', 'shop-details');
-        localStorage.setItem('id', this.getAttribute('id'));
+        sessionStorage.setItem('currentPage', 'shop-details');
+        sessionStorage.setItem('id', this.getAttribute('id'));
         location.reload();
     });
 }
 
 function cleanDetails() {
     $(document).on("click", ".cleandetails" ,function(){
-        localStorage.setItem('currentPage', 'shop');
+        sessionStorage.setItem('currentPage', 'shop');
         location.reload();
     });
 
     $(document).on("click", ".nav-item" ,function(){
-        localStorage.removeItem('currentPage');
+        sessionStorage.removeItem('currentPage');
     });
 }
 
+
+
+function initMap() {
+    const shop = { lat: 38.821989, lng: -0.608746 };
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 18,
+      center: shop,
+    });
+    const marker = new google.maps.Marker({
+      position: shop,
+      map: map,
+    });
+  }
+
+ 
+
 function showDetails() {
-    ajaxPromise('module/shop/controller/controller_shop.php?op=details&id=' + localStorage.getItem('id'), 'GET', 'JSON').then(function(data) {
+    ajaxPromise('module/shop/controller/controller_shop.php?op=details&id=' + sessionStorage.getItem('id'), 'GET', 'JSON').then(function(data) {
         $('#shop').empty();
         $('<div></div>').attr({'id':'details'}).appendTo('#shop');
         $('<h1></h1>').text(data[0].nombre).appendTo('#details');
         $('<img></img>').attr({'src':data[0].img}).appendTo('#details');
         $('<div></div>').attr({'class':'infodivdetails'}).appendTo('#details');
         $('<ul></ul>').attr({'class':'infodivdetails'}).appendTo('#details .infodivdetails');
-        $('<li></li>').text(data[0].plataforma).appendTo('#details .infodivdetails ul');
-        $('<li></li>').text(data[0].clasificacion).appendTo('#details .infodivdetails ul');
-        $('<li></li>').text(data[0].genero).appendTo('#details .infodivdetails ul');
+        $('<h2></h2>').text('State: '+data[0].estado).appendTo('#details .infodivdetails ul');
+        $('<h2></h2>').text('Company: '+data[0].companyia).appendTo('#details .infodivdetails ul');
+        $('<h2></h2>').text('Plataforma: '+data[0].plataforma).appendTo('#details .infodivdetails ul');
+        $('<h2></h2>').text('Clasification: '+data[0].clasificacion).appendTo('#details .infodivdetails ul');
+        $('<div></div>').text('Clasification: '+data[0].clasificacion).appendTo('#details .infodivdetails ul');
+        set_api();
         $('<button></button>').attr({'class':'cleandetails'}).text('Return').appendTo('#details');
         // $('<div><div>').attr({'class': 'top-photo'}).appendTo('.top-details');
         // $('<div></div>').attr({'class': 'container separe-menu', 'id': 'container-shop-details'}).appendTo('.content');
@@ -186,14 +297,11 @@ function showDetails() {
 
 function loadContent(){
     $('#shop').empty();
-    switch (localStorage.getItem('currentPage')) {
+    switch (sessionStorage.getItem('currentPage')) {
         case 'shop-details':
             showDetails();
             cleanDetails();
             break;
-        // case 'home-carousel':
-
-        //     break
         default:
             loadPagelist();
             rangeSlider();

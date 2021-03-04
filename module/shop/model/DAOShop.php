@@ -9,8 +9,9 @@
             $plataform=$_POST['plataform'];
             $age=$_POST['age'];
             $genero=$_POST['genero'];
-            $sql2 = "SELECT COUNT(*) count FROM videogames WHERE precio BETWEEN $minrange AND $maxrange AND plataforma LIKE '%$plataform%' AND clasificacion LIKE '%$age%' AND generos LIKE '%$genero%'";
-            $sql = "SELECT * FROM videogames WHERE precio BETWEEN $minrange AND $maxrange AND plataforma LIKE '%$plataform%' AND clasificacion LIKE '%$age%' AND generos LIKE '%$genero%'";
+            $nombre=$_POST['search'];
+            $sql2 = "SELECT COUNT(id) count FROM videogames WHERE plataforma LIKE '%$plataform%' AND clasificacion LIKE '%$age%' AND generos LIKE '%$genero%' AND nombre LIKE '$nombre'";
+            $sql = "SELECT * FROM videogames WHERE precio BETWEEN $minrange AND $maxrange AND plataforma LIKE '%$plataform%' AND clasificacion LIKE '%$age%' AND generos LIKE '%$genero%' AND nombre LIKE '%$nombre%'";
             $conexion = connect::con();
             $res = mysqli_query($conexion, $sql);
             $res2 =mysqli_query($conexion, $sql2);
@@ -21,10 +22,13 @@
             while($row2 = $res2->fetch_array(MYSQLI_ASSOC)) {
                 $resArray2[] = $row2;
             }
-            if ($resArray) {
-                return $resArray;
-            }else {
+
+            if (!$resArray) {
                 return $resArray2;
+            }else{
+
+                $resArraytotal[] = array_merge($resArray2,$resArray);  
+                return $resArraytotal[0];
             }
         }
 
