@@ -101,6 +101,8 @@ function printProducts(numberofpages,limit,offset,data) {
                 $('<li></li>').text(data[i].clasificacion).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<li></li>').text(data[i].estado).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<div></div>').attr({'class':'divbutton'}).appendTo('#'+data[i].id);
+                $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
                 $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
                 $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
             }
@@ -115,6 +117,8 @@ function printProducts(numberofpages,limit,offset,data) {
                 $('<li></li>').text(data[i].clasificacion).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<li></li>').text(data[i].estado).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<div></div>').attr({'class':'divbutton'}).appendTo('#'+data[i].id);
+                $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
                 $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
                 $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
             }
@@ -284,7 +288,11 @@ function showDetails() {
         $('<h2></h2>').text('Company: '+data[0].companyia).appendTo('#details .infodivdetails ul');
         $('<h2></h2>').text('Plataforma: '+data[0].plataforma).appendTo('#details .infodivdetails ul');
         $('<h2></h2>').text('Clasification: '+data[0].clasificacion).appendTo('#details .infodivdetails ul');
-        $('<div></div>').text('Clasification: '+data[0].clasificacion).appendTo('#details .infodivdetails ul');
+        $('<h2></h2>').text('Clasification: '+data[0].precio).appendTo('#details .infodivdetails ul');
+        $('<span></span>').attr({'id':'spanviews'}).appendTo('#details .infodivdetails ul');
+        $('<h2></h2>').attr({'class':'views'}).text(data[0].views).appendTo('#spanviews');
+        $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#spanviews');
+        $('<h2></h2>').attr({'class':'price'}).text(data[0].precio+'€').appendTo('#details .infodivdetails ul');
         set_api();
         $('<button></button>').attr({'class':'cleandetails'}).text('Return').appendTo('#details');
         // $('<div><div>').attr({'class': 'top-photo'}).appendTo('.top-details');
