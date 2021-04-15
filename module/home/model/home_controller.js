@@ -1,18 +1,3 @@
-function ajaxPromise(sUrl, sType, sTData, sData = undefined) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: sUrl,
-            type: sType,
-            dataType: sTData,
-            data: sData
-        }).done((data) => {
-            resolve(data);
-        }).fail((jqXHR, textStatus, errorThrow) => {
-            reject(errorThrow);
-        }); 
-    });
-}
-
 function showMainCarousel() {
     $('#main-carousel').owlCarousel({
         loop:true,
@@ -83,7 +68,6 @@ function loadMainCarousel() {
 
 function loadSecundaryCarousel() {
     ajaxPromise('module/home/controller/controller_home.php?op=plataforms','GET','JSON').then(function(data){
-        console.log(data);
         for (let i = 0; i < data.length; i++) {
             $('<div></div>').attr({'id':data[i]['plataforma']+"div",'class':'plataformdiv'}).appendTo('#secundary-carousel');
             $('<img>').attr({'src':data[i]['img']}).appendTo('#'+data[i]['plataforma']+"div");

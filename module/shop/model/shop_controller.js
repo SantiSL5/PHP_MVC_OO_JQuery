@@ -1,18 +1,3 @@
-function ajaxPromise(sUrl, sType, sTData, sData = undefined) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: sUrl,
-            type: sType,
-            dataType: sTData,
-            data: sData
-        }).done((data) => {
-            resolve(data);
-        }).fail((jqXHR, textStatus, errorThrow) => {
-            reject(errorThrow);
-        }); 
-    });
-}
-
 function set_api() {
     var language = localStorage.getItem("lang");
     $("<div></div>").attr({ "id": "map" }).appendTo("#details");
@@ -86,7 +71,6 @@ function loadPagelist() {
 
 function printProducts(numberofpages,limit,offset,data) {
     $('#container-products').empty();
-    console.log(data);
     if (data.length==1) {
         $('<p></p>').text('No products found').appendTo('#container-products');
     }else{
@@ -199,8 +183,6 @@ function listallproducts(offset) {
     if (localStorage.getItem('genero')===null) {
         localStorage.setItem('genero', $("#genero").val());
     }
-    console.log("s"+sessionStorage.getItem('search'));
-    console.log("h"+localStorage.getItem('search'));
 
     // console.log("m"+localStorage.getItem('minrange'));
     // console.log("M"+localStorage.getItem('maxrange'));

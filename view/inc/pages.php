@@ -18,6 +18,12 @@
 		case "shop";
 			include("module/shop/view/".$_GET['page'].".html");
 			break;
+		case "login";
+			include("module/login/view/".$_GET['page'].".html");
+			break;
+		case "register";
+			include("module/login/view/".$_GET['page'].".html");
+			break;
 		case "error404";
 			include("view/inc/error404.php");
 			break;

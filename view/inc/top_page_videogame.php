@@ -12,11 +12,12 @@
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
 		<script src="/credentials/credentials.js"></script>
+		<script src="general/utils/utils.js"></script>
 		<!-- <link href="view/css/style.css" rel="stylesheet" type="text/css" /> -->
 		<link rel="stylesheet" href="/module/menu/view/css/menu.css">
-		<script src="module/videogames/view/js/validate_videogame.js"></script>
-		<script src="module/videogames/view/js/modal.js"></script>
-        <script src="view/js/translate.js"></script>
-        <script src="module/menu/view/js/menu.js"></script>
+		<script src="module/videogames/model/validate_videogame.js"></script>
+		<script src="module/videogames/model/controller_videogame.js"></script>
+        <script src="general/utils/translate.js"></script>
+		<script src="module/menu/model/menu_controller.js"></script>
     </head>
     <body>

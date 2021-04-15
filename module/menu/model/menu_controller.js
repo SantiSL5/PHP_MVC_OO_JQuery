@@ -37,8 +37,21 @@ function buttonSearch() {
     });
 }
 
+function registerbtn_navclick() {
+    $('#registerbtn-nav').on('click', function() {
+        window.location.href = 'index.php?page=register';
+    });
+}
+
+function loginbtn_navclick() {
+    $('#loginbtn-nav').on('click', function() {
+        window.location.href = 'index.php?page=login';
+    });
+}
+
 $(document).ready(function() {
     buttonSearch();
-    // clearstorage();
     autoComplete();
+    registerbtn_navclick();
+    loginbtn_navclick();
 });

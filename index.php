@@ -5,6 +5,10 @@
 		include("view/inc/top_page_home.php");
 	}else if((isset($_GET['page'])) && ($_GET['page']==="shop") ){
 		include("view/inc/top_page_shop.php");
+	}else if((isset($_GET['page'])) && ($_GET['page']==="login") ){
+		include("view/inc/top_page_login.php");
+	}else if((isset($_GET['page'])) && ($_GET['page']==="register") ){
+		include("view/inc/top_page_register.php");
 	}else{
 		include("view/inc/top_page_home.php");
 	}

@@ -12,10 +12,11 @@
         <link rel="stylesheet" href="/external/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css">
         <script src="/external/OwlCarousel2-2.3.4/dist/owl.carousel.js"></script>
         <script src="/credentials/credentials.js"></script>
-        <script src="/module/home/view/js/home.js"></script>
+        <script src="general/utils/utils.js"></script>
+        <script src="/module/home/model/home_controller.js"></script>
         <link rel="stylesheet" href="/module/home/view/css/home.css">
         <link rel="stylesheet" href="/module/menu/view/css/menu.css">
-        <script src="view/js/translate.js"></script>
-        <script src="module/menu/view/js/menu.js"></script>
+        <script src="general/utils/translate.js"></script>
+        <script src="module/menu/model/menu_controller.js"></script>
     </head>
     <body>
