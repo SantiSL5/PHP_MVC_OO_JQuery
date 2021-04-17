@@ -54,7 +54,7 @@
                 $result['invalid_token']=true;
             }else{
                 $username=$token['username'];
-                $sql = "SELECT * FROM users WHERE username=$username";
+                $sql = "SELECT * FROM users WHERE username='$username'";
                 $conexion = connect::con();
                 $res = mysqli_query($conexion, $sql);
                 $row = $res->fetch_assoc();

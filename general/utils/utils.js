@@ -16,17 +16,13 @@ function ajaxPromise(sUrl, sType, sTData, sData = undefined) {
 function menu_login() {
     $('<ul></ul>').attr({'class':'navbar-nav justify-content-end'}).appendTo('#account-navbar');
     $('<li></li>').attr({'class':'nav-item'}).appendTo('#account-navbar ul');
-    token = localStorage.getItem('token');
+    token=get_token();
     if (token === null) {
         $('<button/>').attr({'id':'registerbtn-nav','class':'btn btn-outline-success me-2'}).text('Register').appendTo('#account-navbar ul li');
         $('<button/>').attr({'id':'loginbtn-nav','class':'btn btn-outline-success me-2'}).text('Login').appendTo('#account-navbar ul li');
     } else{
         ajaxPromise('module/login/controller/controller_login.php?op=menu_info', 'POST', 'JSON',{'token':token}).then(function(data) {
-            if (data['invalid_token'] == true) {
-                logout();
-                alert("Sesión no válida, vuelva a iniciar sesión");
-                location.reload();
-            }
+            check_validtoken(data['invalid_token']);
             $('<a></a>').attr({'id':'username_menu','class':'nav-link'}).text(data['username']).appendTo('#account-navbar ul');
             $('<img/>').attr({'id':'avatar_menu','src':data['avatar']}).appendTo('#account-navbar ul');
             $('<button/>').attr({'id':'logoutbtn-nav','class':'btn btn-outline-success me-2'}).text('Logout').appendTo('#account-navbar ul');
@@ -44,6 +40,21 @@ function logoutbtn_navclick(){
         location.reload();
         logout();
     });
+}
+
+function get_token(){
+    token = localStorage.getItem('token');
+    return token;
+}
+
+function check_validtoken(check_validtoken){
+    if (check_validtoken == true) {
+        logout();
+        alert("Sesión no válida, vuelva a iniciar sesión");
+        location.reload();
+    }else{
+        return true;
+    }
 }
 
 function logout() {

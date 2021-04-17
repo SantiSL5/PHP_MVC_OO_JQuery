@@ -88,6 +88,23 @@
                 exit;
             }
             break;
+        case 'showlike';
+            try{
+                $daoshop = new DAOShop();
+            	$rdo = $daoshop->showlike();
+            }catch (Exception $e){
+                $callback = 'index.php?page=503';
+			    die('<script>window.location.href="'.$callback .'";</script>');
+            }
+            
+            if(!$rdo){
+                echo json_encode("error");
+                exit;
+            }else{
+                echo json_encode($rdo);
+                exit;
+            }
+            break;
         // case 'viewup';
         //     try{
         //         $daoshop = new DAOShop();

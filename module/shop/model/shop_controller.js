@@ -70,12 +70,16 @@ function loadPagelist() {
 }
 
 function printProducts(numberofpages,limit,offset,data) {
+    token=get_token();
     $('#container-products').empty();
     if (data.length==1) {
         $('<p></p>').text('No products found').appendTo('#container-products');
     }else{
-        if (((offset-1)*limit)+4>data.length) {
+        if (((offset-1)*limit)+4>data.length-1) {
+            
             for (let i = ((offset-1)*limit)+1; i <= data.length-1; i++) {
+                console.log(i);
+                // $('#'+data[i].id+' .divbutton').empty();
                 $('<div></div>').attr({'id':data[i].id,'class':'card'}).appendTo('#container-products');
                 $('<img></img>').attr({'src':data[i].img}).appendTo('#'+data[i].id);
                 $('<div></div>').attr({'class':'infodiv'}).appendTo('#'+data[i].id);
@@ -85,13 +89,28 @@ function printProducts(numberofpages,limit,offset,data) {
                 $('<li></li>').text(data[i].clasificacion).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<li></li>').text(data[i].estado).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<div></div>').attr({'class':'divbutton'}).appendTo('#'+data[i].id);
-                $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
-                $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
-                $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
-                $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                $('<span></span>').attr({'class':'likes'}).text(data[i].likes).appendTo('#'+data[i].id+' .divbutton');
+                ajaxPromise('module/shop/controller/controller_shop.php?op=showlike', 'POST', 'JSON',{'token':token,'idproduct':data[i].id}).then(function(datalike){
+                    check_validtoken(datalike['invalid_token']);
+                    if (datalike['like'] == true) {
+                        $('<img></img>').attr({'src':'/module/shop/view/img/heart_like.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                    }else{
+                        $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                    }
+                    $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                    $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
+                    $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
+                    $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                }).catch(function(textStatus){
+                    console.log(textStatus);
+                });
+
             }
         }else{
-            for (let i = ((offset-1)*limit)+1; i <= (offset-1)*limit+limit; i++) {
+            console.log("hola");
+            for (let i = ((offset-1)*limit)+1; i <= ((offset-1)*limit)+limit; i++) {
+                console.log(i);
+                // $('#'+data[i].id+' .divbutton').empty();
                 $('<div></div>').attr({'id':data[i].id,'class':'card'}).appendTo('#container-products');
                 $('<img></img>').attr({'src':data[i].img}).appendTo('#'+data[i].id);
                 $('<div></div>').attr({'class':'infodiv'}).appendTo('#'+data[i].id);
@@ -101,10 +120,21 @@ function printProducts(numberofpages,limit,offset,data) {
                 $('<li></li>').text(data[i].clasificacion).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<li></li>').text(data[i].estado).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<div></div>').attr({'class':'divbutton'}).appendTo('#'+data[i].id);
-                $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
-                $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
-                $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
-                $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                $('<span></span>').attr({'class':'likes'}).text(data[i].likes).appendTo('#'+data[i].id+' .divbutton');
+                ajaxPromise('module/shop/controller/controller_shop.php?op=showlike', 'POST', 'JSON',{'token':token,'idproduct':data[i].id}).then(function(datalike){
+                    check_validtoken(datalike['invalid_token']);
+                    if (datalike['like'] == true) {
+                        $('<img></img>').attr({'src':'/module/shop/view/img/heart_like.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                    }else{
+                        $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                    }
+                    $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                    $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
+                    $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
+                    $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                }).catch(function(textStatus){
+                    console.log(textStatus);
+                });
             }
         } 
     }
@@ -133,31 +163,6 @@ function loadPagination(numberofpages,limit,offset,data) {
     }else {
         $("<button></button>").attr({ "id": "pag-next"}).text('>').appendTo("#pagination");
     }
-
-    $(document).on("click", "#pag-back" ,function(){
-        if (offset!=1) {
-            offset--;
-            $('#container-products').empty();
-            listallproducts(offset);
-        }
-    });
-
-    $(document).on("click", "#pag-next" ,function(){
-        if (offset!=numberofpages) {
-            offset++;
-            $('#container-products').empty();
-            listallproducts(offset);
-        }
-    });
-
-    $(document).on("click", ".page" ,function(){
-        if (offset!=numberofpages) {
-            $('#container-products').empty();
-            listallproducts(Number(this.getAttribute("data")));
-        }
-    });
-
-    printProducts(numberofpages,limit,offset,data);
 }
 
 function listallproducts(offset) {
@@ -193,7 +198,35 @@ function listallproducts(offset) {
     ajaxPromise('module/shop/controller/controller_shop.php?op=listall','POST','JSON',{minrange:localStorage.getItem('minrange'),maxrange:localStorage.getItem('maxrange'),plataform:localStorage.getItem('plataform'),age:localStorage.getItem('age'),genero:localStorage.getItem('genero'),search:localStorage.getItem('search')}).then(function(data){
         numberofpages=Math.ceil((data.length-1) / 4);
         limit=4;
+
+        $(document).on("click", "#pag-back" ,function(){
+            if (offset!=1) {
+                offset--;
+                $('#container-products').empty();
+                loadPagination(numberofpages,limit,offset,data);
+                printProducts(numberofpages,limit,offset,data);
+            }
+        });
+
+        $(document).on("click", "#pag-next" ,function(){
+            if (offset!=numberofpages) {
+                offset++;
+                $('#container-products').empty();
+                loadPagination(numberofpages,limit,offset,data);
+                printProducts(numberofpages,limit,offset,data);
+            }
+        });
+
+        $(document).on("click", ".page" ,function(){
+            if (offset!=numberofpages) {
+                $('#container-products').empty();
+                offset=Number(this.getAttribute("data"));
+                loadPagination(numberofpages,limit,offset,data);
+                printProducts(numberofpages,limit,offset,data);
+            }
+        });
         loadPagination(numberofpages,limit,offset,data);
+        printProducts(numberofpages,limit,offset,data);
     }).catch(function(textStatus){
             console.log(textStatus);
     });

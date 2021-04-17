@@ -16,10 +16,10 @@
         <script src="/external/OwlCarousel2-2.3.4/dist/owl.carousel.js"></script>
         <script src="/credentials/credentials.js"></script>
         <script src="general/utils/utils.js"></script>
-        <link rel="stylesheet" href="/module/shop/view/css/shop.css">
-        <link rel="stylesheet" href="/module/menu/view/css/menu.css">
         <script src="/module/shop/model/shop_controller.js"></script>
         <script src="general/utils/translate.js"></script>
         <script src="module/menu/model/menu_controller.js"></script>
+        <link rel="stylesheet" href="/module/shop/view/css/shop.css">
+        <link rel="stylesheet" href="/module/menu/view/css/menu.css">
     </head>
     <body>

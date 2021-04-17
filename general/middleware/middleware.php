@@ -16,7 +16,7 @@
             // echo ("true");
             $result['invalid_token']=false;
             $result['token']=encode($secret,$username);
-            $result['username']='"'.$username.'"';
+            $result['username']=$username;
         }else {
             $result['invalid_token']=true;
         }

@@ -1,6 +1,9 @@
 <?php
     $path = $_SERVER['DOCUMENT_ROOT'];
     include($path . "/model/connect.php");
+    include($path . "/general/middleware/middleware.php");
+    require_once $path."/general/classes/JWT.php";
+    $databaseConfig = include ($path . "/credentials/credentials.php");
 
     class DAOShop{
         function read_all_videogames(){
@@ -78,6 +81,34 @@
                 $resArray[] = $row;
             }
             return $resArray;
+        }
+
+        function showlike(){
+            $token=$_POST['token'];
+            $idproduct=$_POST['idproduct'];
+            $token=decode($token);
+            if ($token['invalid_token'] == true) {
+                $result['invalid_token']=true;
+            }else{
+                $username=$token['username'];
+                $sql = "SELECT u.username,f.idvideogame
+                FROM users u 
+                INNER JOIN favorites f 
+                ON u.id=f.iduser
+                WHERE u.username='$username' && f.idvideogame=$idproduct";
+                $conexion = connect::con();
+                $res = mysqli_query($conexion, $sql);
+                $row = $res->fetch_assoc();
+                if ($row['username']==$username && $row['idvideogame']==$idproduct) {
+                    $result['like']=true;
+                }else {
+                    $result['like']=false;
+                }
+                $result['invalid_token']=false;
+                $result['token']=$token['token'];
+                connect::close($conexion);
+            }
+            return $result;
         }
         // function viewup($videogame) {
             
