@@ -25,8 +25,8 @@
                 $daoshop = new DAOShop();
             	$rdo = $daoshop->read_details($_GET['id']);
             }catch (Exception $e){
-                $callback = 'index.php?page=503';
-			    die('<script>window.location.href="'.$callback .'";</script>');
+                // $callback = 'index.php?page=503';
+			    // die('<script>window.location.href="'.$callback .'";</script>');
             }
             
             if(!$rdo){
@@ -92,6 +92,23 @@
             try{
                 $daoshop = new DAOShop();
             	$rdo = $daoshop->showlike();
+            }catch (Exception $e){
+                $callback = 'index.php?page=503';
+			    die('<script>window.location.href="'.$callback .'";</script>');
+            }
+            
+            if(!$rdo){
+                echo json_encode("error");
+                exit;
+            }else{
+                echo json_encode($rdo);
+                exit;
+            }
+            break;
+        case 'like';
+            try{
+                $daoshop = new DAOShop();
+            	$rdo = $daoshop->like();
             }catch (Exception $e){
                 $callback = 'index.php?page=503';
 			    die('<script>window.location.href="'.$callback .'";</script>');

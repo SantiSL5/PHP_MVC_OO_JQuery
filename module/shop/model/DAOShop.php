@@ -105,7 +105,45 @@
                     $result['like']=false;
                 }
                 $result['invalid_token']=false;
-                $result['token']=$token['token'];
+                $result['token']=encode($username);
+                connect::close($conexion);
+            }
+            return $result;
+        }
+
+        function like(){
+            $token=$_POST['token'];
+            $idproduct=$_POST['idproduct'];
+            $token=decode($token);
+            if ($token['invalid_token'] == true) {
+                $result['invalid_token']=true;
+            }else{
+                $username=$token['username'];
+                $sql = "SELECT COUNT(*) AS 'check'
+                FROM users u 
+                INNER JOIN favorites f 
+                ON u.id=f.iduser
+                WHERE u.username='$username' && f.idvideogame=$idproduct";
+                $sql2 = "SELECT id
+                FROM users
+                WHERE username='$username'";
+                $conexion = connect::con();
+                $res = mysqli_query($conexion, $sql);
+                $row = $res->fetch_assoc();
+                $res2 = mysqli_query($conexion, $sql2);
+                $row2 = $res2->fetch_assoc();
+                $iduser=$row2['id'];
+                if ($row['check']==0) {
+                    // echo("user:".$iduser."pro: ".$idproduct);
+                    $sql3="INSERT INTO favorites (iduser, idvideogame) VALUES ($iduser,$idproduct)";
+                    $result['like']=true;
+                }else {
+                    $sql3="DELETE FROM favorites WHERE iduser=$iduser && idvideogame=$idproduct";
+                    $result['like']=false;
+                }
+                $res3 = mysqli_query($conexion, $sql3);
+                $result['invalid_token']=false;
+                $result['token']=encode($username);
                 connect::close($conexion);
             }
             return $result;

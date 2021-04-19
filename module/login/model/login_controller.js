@@ -13,7 +13,11 @@ function login() {
 
                     if (data['correct_password'] == false) {
                         $('#error-password-login').text('La contraseña introducida no es correcta');
+                    }else{
+                        $('#error-password-login').text('');
                     }
+                }else{
+                    $('#error-user-login').text('');
                 }
             }
         }).catch(function() {

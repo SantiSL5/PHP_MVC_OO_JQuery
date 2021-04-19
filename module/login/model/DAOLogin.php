@@ -61,7 +61,7 @@
                 $result['invalid_token']=false;
                 $result['username']=$row['username'];
                 $result['avatar']=$row['avatar'];
-                $result['token']=$token['token'];
+                $result['token']=encode($username);
                 connect::close($conexion);
             }
             return $result;

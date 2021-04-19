@@ -22,7 +22,7 @@ function menu_login() {
         $('<button/>').attr({'id':'loginbtn-nav','class':'btn btn-outline-success me-2'}).text('Login').appendTo('#account-navbar ul li');
     } else{
         ajaxPromise('module/login/controller/controller_login.php?op=menu_info', 'POST', 'JSON',{'token':token}).then(function(data) {
-            check_validtoken(data['invalid_token']);
+            check_validtoken(data['invalid_token'],data['token']);
             $('<a></a>').attr({'id':'username_menu','class':'nav-link'}).text(data['username']).appendTo('#account-navbar ul');
             $('<img/>').attr({'id':'avatar_menu','src':data['avatar']}).appendTo('#account-navbar ul');
             $('<button/>').attr({'id':'logoutbtn-nav','class':'btn btn-outline-success me-2'}).text('Logout').appendTo('#account-navbar ul');
@@ -47,13 +47,13 @@ function get_token(){
     return token;
 }
 
-function check_validtoken(check_validtoken){
+function check_validtoken(check_validtoken,token){
     if (check_validtoken == true) {
         logout();
         alert("Sesión no válida, vuelva a iniciar sesión");
         location.reload();
     }else{
-        return true;
+        localStorage.setItem('token', token);
     }
 }
 

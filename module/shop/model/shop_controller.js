@@ -78,7 +78,6 @@ function printProducts(numberofpages,limit,offset,data) {
         if (((offset-1)*limit)+4>data.length-1) {
             
             for (let i = ((offset-1)*limit)+1; i <= data.length-1; i++) {
-                console.log(i);
                 // $('#'+data[i].id+' .divbutton').empty();
                 $('<div></div>').attr({'id':data[i].id,'class':'card'}).appendTo('#container-products');
                 $('<img></img>').attr({'src':data[i].img}).appendTo('#'+data[i].id);
@@ -89,27 +88,31 @@ function printProducts(numberofpages,limit,offset,data) {
                 $('<li></li>').text(data[i].clasificacion).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<li></li>').text(data[i].estado).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<div></div>').attr({'class':'divbutton'}).appendTo('#'+data[i].id);
-                $('<span></span>').attr({'class':'likes'}).text(data[i].likes).appendTo('#'+data[i].id+' .divbutton');
-                ajaxPromise('module/shop/controller/controller_shop.php?op=showlike', 'POST', 'JSON',{'token':token,'idproduct':data[i].id}).then(function(datalike){
-                    check_validtoken(datalike['invalid_token']);
-                    if (datalike['like'] == true) {
-                        $('<img></img>').attr({'src':'/module/shop/view/img/heart_like.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
-                    }else{
-                        $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
-                    }
+                $('<span></span>').attr({'id':'likes'+data[i].id,'class':'likes'}).text(data[i].likes).appendTo('#'+data[i].id+' .divbutton');
+                if (token===null) {
+                    $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'not_like'}).appendTo('#'+data[i].id+' .divbutton');
                     $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
                     $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
                     $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
-                    $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
-                }).catch(function(textStatus){
-                    console.log(textStatus);
-                });
-
+                }else{
+                    ajaxPromise('module/shop/controller/controller_shop.php?op=showlike', 'POST', 'JSON',{'token':token,'idproduct':data[i].id}).then(function(datalike){
+                        check_validtoken(datalike['invalid_token'],datalike['token']);
+                        if (datalike['like'] == true) {
+                            $('<img></img>').attr({'src':'/module/shop/view/img/heart_like.png','id':data[i].id,'class':'like'}).appendTo('#'+data[i].id+' .divbutton');
+                        }else{
+                            $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'not_like'}).appendTo('#'+data[i].id+' .divbutton');
+                        }
+                        $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                        $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
+                        $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
+                        $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                    }).catch(function(textStatus){
+                        console.log(textStatus);
+                    });
+                }
             }
         }else{
-            console.log("hola");
             for (let i = ((offset-1)*limit)+1; i <= ((offset-1)*limit)+limit; i++) {
-                console.log(i);
                 // $('#'+data[i].id+' .divbutton').empty();
                 $('<div></div>').attr({'id':data[i].id,'class':'card'}).appendTo('#container-products');
                 $('<img></img>').attr({'src':data[i].img}).appendTo('#'+data[i].id);
@@ -120,21 +123,28 @@ function printProducts(numberofpages,limit,offset,data) {
                 $('<li></li>').text(data[i].clasificacion).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<li></li>').text(data[i].estado).appendTo('#'+data[i].id+' .infodiv ul');
                 $('<div></div>').attr({'class':'divbutton'}).appendTo('#'+data[i].id);
-                $('<span></span>').attr({'class':'likes'}).text(data[i].likes).appendTo('#'+data[i].id+' .divbutton');
-                ajaxPromise('module/shop/controller/controller_shop.php?op=showlike', 'POST', 'JSON',{'token':token,'idproduct':data[i].id}).then(function(datalike){
-                    check_validtoken(datalike['invalid_token']);
-                    if (datalike['like'] == true) {
-                        $('<img></img>').attr({'src':'/module/shop/view/img/heart_like.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
-                    }else{
-                        $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'likebtn'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
-                    }
+                $('<span></span>').attr({'id':'likes'+data[i].id,'class':'likes'}).text(data[i].likes).appendTo('#'+data[i].id+' .divbutton');
+                if (token===null) {
+                    $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'not_like'}).appendTo('#'+data[i].id+' .divbutton');
                     $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
                     $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
                     $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
-                    $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
-                }).catch(function(textStatus){
-                    console.log(textStatus);
-                });
+                }else{
+                    ajaxPromise('module/shop/controller/controller_shop.php?op=showlike', 'POST', 'JSON',{'token':token,'idproduct':data[i].id}).then(function(datalike){
+                        check_validtoken(datalike['invalid_token'],datalike['token']);
+                        if (datalike['like'] == true) {
+                            $('<img></img>').attr({'src':'/module/shop/view/img/heart_like.png','id':data[i].id,'class':'like'}).appendTo('#'+data[i].id+' .divbutton');
+                        }else{
+                            $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[i].id,'class':'not_like'}).appendTo('#'+data[i].id+' .divbutton');
+                        }
+                        $('<span></span>').attr({'class':'views'}).text(data[i].views).appendTo('#'+data[i].id+' .divbutton');
+                        $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
+                        $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
+                        $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                    }).catch(function(textStatus){
+                        console.log(textStatus);
+                    });
+                }
             }
         } 
     }
@@ -232,6 +242,40 @@ function listallproducts(offset) {
     });
 };
 
+function like() {
+    $(document).on("click", ".like" ,function(){
+        videogameid = $(this).attr('id');
+        if (token===null) {
+            window.location.href = 'index.php?page=login';
+        }else{
+            ajaxPromise('module/shop/controller/controller_shop.php?op=like', 'POST', 'JSON',{'token':token,'idproduct':videogameid}).then(function(datalike){
+                check_validtoken(datalike['invalid_token'],datalike['token']);
+            }).catch(function(textStatus){
+                console.log(textStatus);
+            });
+            $(this).attr({'src':'/module/shop/view/img/heart.png','class':'not_like'});
+            likes=parseInt($("#likes"+videogameid).text());
+            $("#likes"+videogameid).text(likes-1);
+        }
+    });
+
+    $(document).on("click", ".not_like" ,function(){
+        videogameid = $(this).attr('id');
+        if (token===null) {
+            window.location.href = 'index.php?page=login';
+        }else{
+            ajaxPromise('module/shop/controller/controller_shop.php?op=like', 'POST', 'JSON',{'token':token,'idproduct':videogameid}).then(function(datalike){
+                check_validtoken(datalike['invalid_token'],datalike['token']);
+            }).catch(function(textStatus){
+                console.log(textStatus);
+            });
+            $(this).attr({'src':'/module/shop/view/img/heart_like.png','class':'like'});
+            likes=parseInt($("#likes"+videogameid).text());
+            $("#likes"+videogameid).text(likes+1);
+        }
+    });
+}
+
 function filter() {
     $(document).on("click", "#applyfilters" ,function(){
         localStorage.setItem('minrange', Number($("#slider-range").slider( "values", 0 )));
@@ -293,6 +337,7 @@ function initMap() {
 
 function showDetails() {
     ajaxPromise('module/shop/controller/controller_shop.php?op=details&id=' + sessionStorage.getItem('id'), 'GET', 'JSON').then(function(data) {
+        token=get_token();
         $('#shop').empty();
         $('<div></div>').attr({'id':'details'}).appendTo('#shop');
         $('<h1></h1>').text(data[0].nombre).appendTo('#details');
@@ -304,17 +349,40 @@ function showDetails() {
         $('<h2></h2>').text('Plataforma: '+data[0].plataforma).appendTo('#details .infodivdetails ul');
         $('<h2></h2>').text('Clasification: '+data[0].clasificacion).appendTo('#details .infodivdetails ul');
         $('<h2></h2>').text('Clasification: '+data[0].precio).appendTo('#details .infodivdetails ul');
-        $('<span></span>').attr({'id':'spanviews'}).appendTo('#details .infodivdetails ul');
-        $('<h2></h2>').attr({'class':'views'}).text(data[0].views).appendTo('#spanviews');
-        $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#spanviews');
-        $('<h2></h2>').attr({'class':'price'}).text(data[0].precio+'€').appendTo('#details .infodivdetails ul');
-        set_api();
-        $('<button></button>').attr({'class':'cleandetails'}).text('Return').appendTo('#details');
+        $('<h2></h2>').attr({'id':"likes"+data[0].id,'class':'likes'}).text(data[0].likes).appendTo('#details .infodivdetails ul');
+        if (token === null) {
+            $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[0].id,'class':'not_like'}).text(data[0].views).appendTo('#details .infodivdetails ul');
+            $('<span></span>').attr({'id':'spanviews'}).appendTo('#details .infodivdetails ul');
+            $('<h2></h2>').attr({'class':'views'}).text(data[0].views).appendTo('#spanviews');
+            $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#spanviews');
+            $('<h2></h2>').attr({'class':'price'}).text(data[0].precio+'€').appendTo('#details .infodivdetails ul');
+            set_api();
+            $('<button></button>').attr({'class':'cleandetails'}).text('Return').appendTo('#details');
+        }else{
+            ajaxPromise('module/shop/controller/controller_shop.php?op=showlike', 'POST', 'JSON',{'token':token,'idproduct':data[0].id}).then(function(datalike){
+                check_validtoken(datalike['invalid_token'],datalike['token']);
+                if (datalike['like']) {
+                    $('<img></img>').attr({'src':'/module/shop/view/img/heart_like.png','id':data[0].id,'class':'like'}).text(data[0].views).appendTo('#details .infodivdetails ul');
+                }else{
+                    $('<img></img>').attr({'src':'/module/shop/view/img/heart.png','id':data[0].id,'class':'not_like'}).text(data[0].views).appendTo('#details .infodivdetails ul');
+                }
+                $('<span></span>').attr({'id':'spanviews'}).appendTo('#details .infodivdetails ul');
+                $('<h2></h2>').attr({'class':'views'}).text(data[0].views).appendTo('#spanviews');
+                $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#spanviews');
+                $('<h2></h2>').attr({'class':'price'}).text(data[0].precio+'€').appendTo('#details .infodivdetails ul');
+                set_api();
+                $('<button></button>').attr({'class':'cleandetails'}).text('Return').appendTo('#details');
+            }).catch(function(textStatus){
+                console.log(textStatus);
+            });
+        }
+
         // $('<div><div>').attr({'class': 'top-photo'}).appendTo('.top-details');
         // $('<div></div>').attr({'class': 'container separe-menu', 'id': 'container-shop-details'}).appendTo('.content');
         
-    }).catch(function() {
-        window.location.href = 'index.php?page=error503'
+    }).catch(function(textStatus) {
+        console.log(textStatus);
+        // window.location.href = 'index.php?page=error503';
     }); 
 }
 
@@ -324,6 +392,7 @@ function loadContent(){
         case 'shop-details':
             showDetails();
             cleanDetails();
+            like();
             break;
         default:
             loadPagelist();
@@ -332,6 +401,7 @@ function loadContent(){
             cleanDetails();
             filter();
             clearfilters();
+            like();
             break;
     }
 }
