@@ -106,6 +106,7 @@ function printProducts(numberofpages,limit,offset,data) {
                         $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
                         $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
                         $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                        $('<img></img>').attr({'id':'cart-'+data[i].id,'src':'module/menu/view/img/cart.png','style':'height: 30px;','class':'cartbtn_shop'}).appendTo('#'+data[i].id+' .divbutton');
                     }).catch(function(textStatus){
                         console.log(textStatus);
                     });
@@ -141,12 +142,13 @@ function printProducts(numberofpages,limit,offset,data) {
                         $('<img></img>').attr({'src':'/module/shop/view/img/eye.png','class':'eye'}).appendTo('#'+data[i].id+' .divbutton');
                         $('<span></span>').attr({'class':'price'}).text(data[i].precio+'€').appendTo('#'+data[i].id+' .divbutton');
                         $('<button></button>').attr({'id':data[i].id,'class':'showdetails'}).text('Show details').appendTo('#'+data[i].id+' .divbutton');
+                        $('<img></img>').attr({'id':'cart-'+data[i].id,'src':'module/menu/view/img/cart.png','style':'height: 30px;','class':'cartbtn_shop'}).appendTo('#'+data[i].id+' .divbutton');
                     }).catch(function(textStatus){
                         console.log(textStatus);
                     });
                 }
             }
-        } 
+        }          
     }
 }
 
@@ -206,8 +208,8 @@ function listallproducts(offset) {
     // console.log("g "+sessionStorage.getItem('genero'));
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=listall','POST','JSON',{minrange:localStorage.getItem('minrange'),maxrange:localStorage.getItem('maxrange'),plataform:localStorage.getItem('plataform'),age:localStorage.getItem('age'),genero:localStorage.getItem('genero'),search:localStorage.getItem('search')}).then(function(data){
-        numberofpages=Math.ceil((data.length-1) / 4);
-        limit=4;
+        limit=8;
+        numberofpages=Math.ceil((data.length-1) / 8);
 
         $(document).on("click", "#pag-back" ,function(){
             if (offset!=1) {
@@ -245,9 +247,7 @@ function listallproducts(offset) {
 function like() {
     $(document).on("click", ".like" ,function(){
         videogameid = $(this).attr('id');
-        if (token===null) {
-            window.location.href = 'index.php?page=login';
-        }else{
+        if (check_logued() == true) {
             ajaxPromise('module/shop/controller/controller_shop.php?op=like', 'POST', 'JSON',{'token':token,'idproduct':videogameid}).then(function(datalike){
                 check_validtoken(datalike['invalid_token'],datalike['token']);
             }).catch(function(textStatus){
@@ -292,9 +292,9 @@ function clearfilters() {
     $(document).on("click", "#clearfilters" ,function(){
         localStorage.setItem('minrange', Number($("#slider-range").slider( "values", 0 )));
         localStorage.setItem('maxrange', Number($("#slider-range").slider( "values", 1 )));
-        localStorage.setItem('plataform', $("#plataforms").val());
-        localStorage.setItem('age', $("#age").val());
-        localStorage.setItem('genero', $("#genero").val());
+        localStorage.setItem('plataform', "");
+        localStorage.setItem('age', "");
+        localStorage.setItem('genero', "");
         localStorage.removeItem('search');
         location.reload();
     });
@@ -331,8 +331,30 @@ function initMap() {
       position: shop,
       map: map,
     });
-  }
+}
 
+function cartbtnShop() {
+    $(document).on("click", "img.cartbtn_shop" ,function(){
+        arrayid = $(this).attr('id').split('-');
+        videogameid = arrayid[1];
+        if (token===null) {
+            window.location.href = 'index.php?page=login';
+        }else{
+            ajaxPromise('module/cart/controller/controller_cart.php?op=addQuant', 'POST', 'JSON',{'token':token,'idproduct':videogameid}).then(function(data){
+                check_validtoken(data['invalid_token'],data['token']);
+                if (data['result']==1) {
+                    refresh_numproducts_cart();
+                }else if (data['result']==0){
+                    alert('No puedes comprar mas del stock máximo');
+                }else if (data['result']==null){
+                    location.reload();
+                }
+            }).catch(function(textStatus){
+                console.log(textStatus);
+            });
+        }
+    });
+}
  
 
 function showDetails() {
@@ -372,6 +394,7 @@ function showDetails() {
                 $('<h2></h2>').attr({'class':'price'}).text(data[0].precio+'€').appendTo('#details .infodivdetails ul');
                 set_api();
                 $('<button></button>').attr({'class':'cleandetails'}).text('Return').appendTo('#details');
+                $('<img></img>').attr({'id':'cart-'+data[0].id,'src':'module/menu/view/img/cart.png','style':'height: 40px;','class':'cartbtn_shop'}).appendTo('#details');
             }).catch(function(textStatus){
                 console.log(textStatus);
             });
@@ -393,6 +416,7 @@ function loadContent(){
             showDetails();
             cleanDetails();
             like();
+            cartbtnShop();
             break;
         default:
             loadPagelist();
@@ -402,6 +426,7 @@ function loadContent(){
             filter();
             clearfilters();
             like();
+            cartbtnShop();
             break;
     }
 }

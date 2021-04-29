@@ -24,6 +24,9 @@
 		case "register";
 			include("module/login/view/".$_GET['page'].".html");
 			break;
+		case "cart";
+			include("module/cart/view/".$_GET['page'].".html");
+			break;
 		case "error404";
 			include("view/inc/error404.php");
 			break;

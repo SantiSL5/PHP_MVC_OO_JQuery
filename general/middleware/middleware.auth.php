@@ -11,19 +11,19 @@
         $tokendecoded=json_decode($tokenjson,true);
         $iat=$tokendecoded['iat'];
         $exp=$tokendecoded['exp'];
-        $username=$tokendecoded['username'];
+        $userid=$tokendecoded['userid'];
         if ($exp>=time()) {
             // echo ("true");
             $result['invalid_token']=false;
-            $result['token']=encode($secret,$username);
-            $result['username']=$username;
+            $result['token']=encode($userid);
+            $result['userid']=$userid;
         }else {
             $result['invalid_token']=true;
         }
         return $result;
     }
 
-    function encode($username){
+    function encode($userid){
         $path = $_SERVER['DOCUMENT_ROOT'];
         $databaseConfig = include ($path . "/credentials/credentials.php");
         $secret = $databaseConfig['secret'];
@@ -37,7 +37,7 @@
         $payload = '{
             "iat":'.$iat.', 
             "exp":'.$exp.',
-            "username":'.'"'.$username.'"'.'
+            "userid":'.$userid.'
         }';
         $JWT = new JWT;
         $result = $JWT->encode($header, $payload, $secret);

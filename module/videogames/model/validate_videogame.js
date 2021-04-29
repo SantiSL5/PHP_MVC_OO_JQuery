@@ -93,7 +93,7 @@ function validate(option){
         document.getElementById('error_code').innerHTML = " * El codigo introducido no es valido (3 números 6 letras)";
         check=false;
     }else{
-        document.getElementById('error_nombre').innerHTML = "";
+        document.getElementById('error_code').innerHTML = "";
     }
     if(!r_nombre){
         document.getElementById('error_nombre').innerHTML = " * El nombre introducido no es valido";

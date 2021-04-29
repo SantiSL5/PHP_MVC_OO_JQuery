@@ -9,6 +9,8 @@
 		include("view/inc/top_page_login.php");
 	}else if((isset($_GET['page'])) && ($_GET['page']==="register") ){
 		include("view/inc/top_page_register.php");
+	}else if((isset($_GET['page'])) && ($_GET['page']==="cart") ){
+		include("view/inc/top_page_cart.php");
 	}else{
 		include("view/inc/top_page_home.php");
 	}

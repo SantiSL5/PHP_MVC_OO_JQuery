@@ -1,7 +1,7 @@
 <?php
     $path = $_SERVER['DOCUMENT_ROOT'];
     include($path . "/model/connect.php");
-    include($path . "/general/middleware/middleware.php");
+    include($path . "/general/middleware/middleware.auth.php");
     require_once $path."/general/classes/JWT.php";
     $databaseConfig = include ($path . "/credentials/credentials.php");
 
@@ -90,22 +90,20 @@
             if ($token['invalid_token'] == true) {
                 $result['invalid_token']=true;
             }else{
-                $username=$token['username'];
-                $sql = "SELECT u.username,f.idvideogame
-                FROM users u 
-                INNER JOIN favorites f 
-                ON u.id=f.iduser
-                WHERE u.username='$username' && f.idvideogame=$idproduct";
+                $userid=$token['userid'];
+                $sql = "SELECT iduser,idvideogame
+                FROM favorites
+                WHERE iduser=$userid && idvideogame=$idproduct";
                 $conexion = connect::con();
                 $res = mysqli_query($conexion, $sql);
                 $row = $res->fetch_assoc();
-                if ($row['username']==$username && $row['idvideogame']==$idproduct) {
+                if ($row['iduser']==$userid && $row['idvideogame']==$idproduct) {
                     $result['like']=true;
                 }else {
                     $result['like']=false;
                 }
                 $result['invalid_token']=false;
-                $result['token']=encode($username);
+                $result['token']=encode($userid);
                 connect::close($conexion);
             }
             return $result;
@@ -118,32 +116,24 @@
             if ($token['invalid_token'] == true) {
                 $result['invalid_token']=true;
             }else{
-                $username=$token['username'];
+                $userid=$token['userid'];
                 $sql = "SELECT COUNT(*) AS 'check'
-                FROM users u 
-                INNER JOIN favorites f 
-                ON u.id=f.iduser
-                WHERE u.username='$username' && f.idvideogame=$idproduct";
-                $sql2 = "SELECT id
-                FROM users
-                WHERE username='$username'";
+                FROM favorites 
+                WHERE iduser=$userid && idvideogame=$idproduct";
                 $conexion = connect::con();
                 $res = mysqli_query($conexion, $sql);
                 $row = $res->fetch_assoc();
-                $res2 = mysqli_query($conexion, $sql2);
-                $row2 = $res2->fetch_assoc();
-                $iduser=$row2['id'];
                 if ($row['check']==0) {
                     // echo("user:".$iduser."pro: ".$idproduct);
-                    $sql3="INSERT INTO favorites (iduser, idvideogame) VALUES ($iduser,$idproduct)";
+                    $sql2="INSERT INTO favorites (iduser, idvideogame) VALUES ($userid,$idproduct)";
                     $result['like']=true;
                 }else {
-                    $sql3="DELETE FROM favorites WHERE iduser=$iduser && idvideogame=$idproduct";
+                    $sql2="DELETE FROM favorites WHERE iduser=$userid && idvideogame=$idproduct";
                     $result['like']=false;
                 }
-                $res3 = mysqli_query($conexion, $sql3);
+                $res2 = mysqli_query($conexion, $sql2);
                 $result['invalid_token']=false;
-                $result['token']=encode($username);
+                $result['token']=encode($userid);
                 connect::close($conexion);
             }
             return $result;

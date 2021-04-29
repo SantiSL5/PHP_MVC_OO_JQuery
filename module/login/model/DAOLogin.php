@@ -1,7 +1,7 @@
 <?php
     $path = $_SERVER['DOCUMENT_ROOT'];
     include($path . "/model/connect.php");
-    include($path . "/general/middleware/middleware.php");
+    include($path . "/general/middleware/middleware.auth.php");
     require_once $path."/general/classes/JWT.php";
     $databaseConfig = include ($path . "/credentials/credentials.php");
 
@@ -29,11 +29,12 @@
             $conexion = connect::con();
             $res = mysqli_query($conexion, $sql);
             $row = $res->fetch_assoc();
+            $userid=$row['id'];
             $username=$row['username'];
             $password=$row['password'];
             if ($username==$username_check) {
                 if (password_verify($pass_check, $password)) {
-                    $result['token'] = encode($username);
+                    $result['token'] = encode($userid);
                     $result['correct_password']=true;
                     $result['username_created']=true;
                 }else{
@@ -53,15 +54,15 @@
             if ($token['invalid_token'] == true) {
                 $result['invalid_token']=true;
             }else{
-                $username=$token['username'];
-                $sql = "SELECT * FROM users WHERE username='$username'";
+                $userid=$token['userid'];
+                $sql = "SELECT * FROM users WHERE id='$userid'";
                 $conexion = connect::con();
                 $res = mysqli_query($conexion, $sql);
                 $row = $res->fetch_assoc();
                 $result['invalid_token']=false;
                 $result['username']=$row['username'];
                 $result['avatar']=$row['avatar'];
-                $result['token']=encode($username);
+                $result['token']=encode($userid);
                 connect::close($conexion);
             }
             return $result;

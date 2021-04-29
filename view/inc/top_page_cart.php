@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Login</title>
+        <title>Cart</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.js"></script>
     	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -14,6 +14,6 @@
         <script src="general/utils/utils.js"></script>
         <script src="general/utils/translate.js"></script>
         <script src="module/menu/model/menu_controller.js"></script>
-        <script src="/module/cart/model/cart_controller.js"></script>
+        <script src="module/cart/model/cart_controller.js"></script>
     </head>
     <body>
