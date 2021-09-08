@@ -18,8 +18,6 @@ The next images are a sample of how the application looks like.
 ![Preview shop](https://user-images.githubusercontent.com/76181286/132520424-7771a1c5-0071-4d00-94c6-d6edcb52a37a.png)
 ![Preview shop_pag](https://user-images.githubusercontent.com/76181286/132520345-093f6ab9-03cf-4354-a143-fe05d42cd054.png)
 
-![Preview shop logged](https://user-images.githubusercontent.com/76181286/122331162-a8ab9c00-cf34-11eb-8923-66c46fb85507.png)
-
 ### Product Details
 ![Preview details1](https://user-images.githubusercontent.com/76181286/132520293-785946d1-3907-45b3-b1d6-7474273a395d.png)
 ![Preview details2](https://user-images.githubusercontent.com/76181286/132520233-2b46b868-39eb-497d-9be7-079a06009c45.png)
