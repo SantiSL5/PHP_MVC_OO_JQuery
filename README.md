@@ -77,5 +77,5 @@ CRUD | This module allows you to modify the database.
 ## Other technologies
 * [Boostrap](https://getbootstrap.com/)
 * [OWL Carousel](https://owlcarousel2.github.io/OwlCarousel2/)
-* gravatar: [Gravatar](https://es.gravatar.com/)
+* [Gravatar](https://es.gravatar.com/)
 
